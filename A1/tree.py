@@ -11,19 +11,37 @@ def main():
     X = [x[:-1] for x in data]
     y = [y[-1] for y in data]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, shuffle=True)
 
-    #  vary_ccp_alpha(X_train, y_train, X_test, y_test)
-    vary_split_criterion(X_train, y_train, X_test, y_test)
+    # vary_ccp_alpha(X_train, y_train, X_test, y_test)
+    # vary_split_criterion(X_train, y_train, X_test, y_test)
+    vary_training_set_size(X, y)
 
 
-def plot_test_and_train_error(test_error, train_error, x_axis, xlabel):
+def plot_test_and_train_error(test_error, train_error, x_axis, xlabel, i):
+    plt.figure(i)
     plt.plot(x_axis, train_error, label="Training Error")
     plt.plot(x_axis, test_error, label="Test Error")
     plt.xlabel(xlabel)
     plt.ylabel("Error")
     plt.legend()
     plt.show()
+
+
+def vary_training_set_size(X, y):
+    train_error = []
+    test_error = []
+    train_sizes = []
+    for i in range(1, 10):
+        train_size = 0.1*i
+        X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, shuffle=True)
+        clf = DecisionTreeClassifier()
+        clf.fit(X_train, y_train)
+        train_error.append(1 - clf.score(X_train, y_train))
+        test_error.append(1 - clf.score(X_test, y_test))
+        train_sizes.append(train_size)
+    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
+
 
 
 def vary_split_criterion(X_train, y_train, X_test, y_test):
@@ -70,8 +88,6 @@ def vary_ccp_alpha(X_train, y_train, X_test, y_test):
         testing_error = 1 - clf.score(X_test, y_test)
         depth = clf.get_depth()
         if depth <= 1:
-            print('this happened')
-            print(ccp_alpha)
             break
         train_error.append(training_error)
         test_error.append(testing_error)
@@ -82,7 +98,7 @@ def vary_ccp_alpha(X_train, y_train, X_test, y_test):
 
     print(min_error)
     print(optimal_ccp)
-    plot_test_and_train_error(test_error, train_error, ccp_alphas, "CCP Alpha")
+    plot_test_and_train_error(test_error, train_error, ccp_alphas, "CCP Alpha", 1)
 
 
 if __name__ == "__main__":

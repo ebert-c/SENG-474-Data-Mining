@@ -9,18 +9,35 @@ def main():
     X = [x[:-1] for x in data]
     y = [y[-1] for y in data]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, shuffle=True)
     # vary_estimators(X_train, y_train, X_test, y_test)
-    vary_feature_number(X_train, y_train, X_test, y_test)
+    # vary_feature_number(X_train, y_train, X_test, y_test)
+    vary_training_set_size(X, y)
 
 
-def plot_test_and_train_error(test_error, train_error, x_axis, xlabel):
+def plot_test_and_train_error(test_error, train_error, x_axis, xlabel, i):
+    plt.figure(i)
     plt.plot(x_axis, train_error, label="Training Error")
     plt.plot(x_axis, test_error, label="Test Error")
     plt.xlabel(xlabel)
     plt.ylabel("Error")
     plt.legend()
     plt.show()
+
+
+def vary_training_set_size(X, y):
+    train_error = []
+    test_error = []
+    train_sizes = []
+    for i in range(1, 10):
+        train_size = 0.1 * i
+        X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, shuffle=True)
+        rfc = RandomForestClassifier()
+        rfc.fit(X_train, y_train)
+        train_error.append(1 - rfc.score(X_train, y_train))
+        test_error.append(1 - rfc.score(X_test, y_test))
+        train_sizes.append(train_size)
+    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
 
 
 def vary_feature_number(X_train, y_train, X_test, y_test):
@@ -44,8 +61,7 @@ def vary_feature_number(X_train, y_train, X_test, y_test):
 
     print(min_error)
     print(optimal_feature_nums)
-    plot_test_and_train_error(test_error, train_error, feature_nums, "Number of Features")
-
+    plot_test_and_train_error(test_error, train_error, feature_nums, "Number of Features", 1)
 
 
 def vary_estimators(X_train, y_train, X_test, y_test):
@@ -69,7 +85,7 @@ def vary_estimators(X_train, y_train, X_test, y_test):
 
     print(min_error)
     print(optimal_n)
-    plot_test_and_train_error(test_error, train_error, estimators, "Number of Estimators")
+    plot_test_and_train_error(test_error, train_error, estimators, "Number of Estimators", 2)
 
 
 if __name__ == "__main__":
