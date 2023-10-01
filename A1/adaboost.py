@@ -1,7 +1,6 @@
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.ensemble import AdaBoostClassifier
 
 from utils import plot_test_and_train_error, print_best_values
