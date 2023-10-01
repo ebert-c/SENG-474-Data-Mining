@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import matplotlib.pyplot as plt
 
+from utils import plot_test_and_train_error, print_best_values
+
 BASELINE_CCP = 0.001
 
 
@@ -13,19 +15,9 @@ def main():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, shuffle=True)
 
-    # vary_ccp_alpha(X_train, y_train, X_test, y_test)
-    # vary_split_criterion(X_train, y_train, X_test, y_test)
+    vary_ccp_alpha(X_train, y_train, X_test, y_test)
+    vary_split_criterion(X_train, y_train, X_test, y_test)
     vary_training_set_size(X, y)
-
-
-def plot_test_and_train_error(test_error, train_error, x_axis, xlabel, i):
-    plt.figure(i)
-    plt.plot(x_axis, train_error, label="Training Error")
-    plt.plot(x_axis, test_error, label="Test Error")
-    plt.xlabel(xlabel)
-    plt.ylabel("Error")
-    plt.legend()
-    plt.show()
 
 
 def vary_training_set_size(X, y):
@@ -33,23 +25,24 @@ def vary_training_set_size(X, y):
     test_error = []
     train_sizes = []
     for i in range(1, 10):
-        train_size = 0.1*i
+        train_size = round(0.1 * i, 2)
         X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, shuffle=True)
         clf = DecisionTreeClassifier()
         clf.fit(X_train, y_train)
         train_error.append(1 - clf.score(X_train, y_train))
         test_error.append(1 - clf.score(X_test, y_test))
         train_sizes.append(train_size)
-    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
 
+    print_best_values(test_error, train_error, train_sizes, "TRAINING SET SIZE", "Training Set Size", "tree_stats")
+    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
 
 
 def vary_split_criterion(X_train, y_train, X_test, y_test):
     clf_gini = DecisionTreeClassifier()
     clf_entropy = DecisionTreeClassifier(criterion="entropy")
-    clf_log_loss = DecisionTreeClassifier(criterion="log_loss")
+    #clf_log_loss = DecisionTreeClassifier(criterion="log_loss")
 
-    criteria = ["Gini", "Entropy", "Log Loss"]
+    criteria = ["Gini", "Entropy"]
     train_error = []
     test_error = []
 
@@ -61,23 +54,24 @@ def vary_split_criterion(X_train, y_train, X_test, y_test):
     train_error.append(1 - clf_entropy.score(X_train, y_train))
     test_error.append(1 - clf_entropy.score(X_test, y_test))
 
-    clf_log_loss.fit(X_train, y_train)
-    train_error.append(1 - clf_log_loss.score(X_train, y_train))
-    test_error.append(1 - clf_log_loss.score(X_test, y_test))
+    # clf_log_loss.fit(X_train, y_train)
+    # train_error.append(1 - clf_log_loss.score(X_train, y_train))
+    # test_error.append(1 - clf_log_loss.score(X_test, y_test))
 
     plt.figure(2, label="Test Error")
     plt.bar(criteria, test_error)
+    plt.savefig("test_error.svg", format="svg")
     plt.figure(3, label="Training Error")
     plt.bar(criteria, train_error)
-    plt.show()
+    plt.savefig("train_error.svg", format="svg")
+
+    print_best_values(test_error, train_error, criteria, "SPLIT CRITERIA", "Split Criteria", "tree_stats")
 
 
 def vary_ccp_alpha(X_train, y_train, X_test, y_test):
     train_error = []
     test_error = []
     ccp_alphas = []
-    min_error = 1
-    optimal_ccp = 0.0
 
     for i in range(0, 1000):
         ccp_alpha = i / 1000
@@ -92,12 +86,8 @@ def vary_ccp_alpha(X_train, y_train, X_test, y_test):
         train_error.append(training_error)
         test_error.append(testing_error)
         ccp_alphas.append(ccp_alpha)
-        if testing_error < min_error:
-            min_error = testing_error
-            optimal_ccp = ccp_alpha
 
-    print(min_error)
-    print(optimal_ccp)
+    print_best_values(test_error, train_error, ccp_alphas, "CCP ALPHA", "CCP Alpha", "tree_stats")
     plot_test_and_train_error(test_error, train_error, ccp_alphas, "CCP Alpha", 1)
 
 
