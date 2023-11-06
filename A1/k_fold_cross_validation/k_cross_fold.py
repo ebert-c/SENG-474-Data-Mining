@@ -25,7 +25,7 @@ def main():
         ada_risk.append(k_fold(ada, X_train, y_train))
         estimators.append(i)
 
-    plot_risks(rfc_risk, "Random Forest", ada_risk, "AdaBoost", estimators, "Estimators", 1)
+    plot_risks(rfc_risk, "Random Forest", ada_risk, "AdaBoost", estimators, "(k-fold)Estimators", 10)
     print_best_risks(rfc_risk, ada_risk, estimators)
 
     min_rfc_risk = min(rfc_risk)
@@ -41,10 +41,10 @@ def main():
     tuned_ada.fit(X_train, y_train)
     tuned_ada_error = 1 - tuned_ada.score(X_test, y_test)
 
-    plt.figure()
+    plt.figure(11)
     plt.bar(["Random Forest", "AdaBoost"], [tuned_rfc_error, tuned_ada_error])
     plt.ylabel("Risk")
-    plt.savefig("Tuned Error Comparison.svg", format="svg")
+    plt.savefig("(k-fold)Tuned Error Comparison.svg", format="svg")
 
 
 def k_fold(algorithm, X_train, y_train):

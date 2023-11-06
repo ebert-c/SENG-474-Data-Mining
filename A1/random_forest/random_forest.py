@@ -2,7 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-from utils import plot_test_and_train_error, print_best_values
+from A1.utils import plot_test_and_train_error, print_best_values
 
 
 def main():
@@ -28,9 +28,9 @@ def vary_training_set_size(X, y):
         train_error.append(1 - rfc.score(X_train, y_train))
         test_error.append(1 - rfc.score(X_test, y_test))
         train_sizes.append(train_size)
-    print_best_values(test_error, train_error, train_sizes, "SIZE OF TRAINING DATA", "Training Set Size (Random Forest)"
+    print_best_values(test_error, train_error, train_sizes, "SIZE OF TRAINING DATA", "Training Set Size"
                       , "random_forest_stats")
-    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
+    plot_test_and_train_error(test_error, train_error, train_sizes, "(Random Forest)Size of Training Data", 7)
 
 
 def vary_feature_number(X_train, y_train, X_test, y_test):
@@ -48,7 +48,7 @@ def vary_feature_number(X_train, y_train, X_test, y_test):
         feature_nums.append(i)
 
     print_best_values(test_error, train_error, feature_nums, "NUMBER OF FEATURES", "Number of Features", "random_forest_stats")
-    plot_test_and_train_error(test_error, train_error, feature_nums, "Number of Features", 1)
+    plot_test_and_train_error(test_error, train_error, feature_nums, "(Random Forest)Number of Features", 8)
 
 
 def vary_estimators(X_train, y_train, X_test, y_test):
@@ -66,7 +66,7 @@ def vary_estimators(X_train, y_train, X_test, y_test):
         estimators.append(i)
 
     print_best_values(test_error, train_error, estimators, "NUMBER OF ESTIMATORS", "Number of Estimators", "random_forest_stats")
-    plot_test_and_train_error(test_error, train_error, estimators, "Number of Estimators", 2)
+    plot_test_and_train_error(test_error, train_error, estimators, "(Random Forest)Number of Estimators", 9)
 
 
 if __name__ == "__main__":

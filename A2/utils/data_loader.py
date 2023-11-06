@@ -6,7 +6,6 @@ P = 0.2
 
 def load_data():
     X_train_filtered, y_train_filtered, X_test_filtered, y_test_filtered = [[], [], [], []]
-
     X_train, y_train = mnist_reader.load_mnist("fashion", kind="train")
     X_test, y_test = mnist_reader.load_mnist("fashion", kind="t10k")
 
@@ -20,7 +19,8 @@ def load_data():
 
     for i in range(len(X_test)):
         if y_test[i] in [5, 7]:
+            y_filtered = 0 if y_test[i] == 5 else 1
             X_test_filtered.append(X_test[i])
-            y_test_filtered.append(y_test[i])
+            y_test_filtered.append(y_filtered)
 
-    return X_train, y_train, X_test, y_test
+    return X_train_filtered, y_train_filtered, X_test_filtered, y_test_filtered

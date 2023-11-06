@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utils import plot_test_and_train_error, print_best_values
+from A1.utils import plot_test_and_train_error, print_best_values
 
 BASELINE_CCP = 0.01
 
@@ -33,15 +33,15 @@ def vary_training_set_size(X, y):
         test_error.append(1 - clf.score(X_test, y_test))
         train_sizes.append(train_size)
 
-    print_best_values(test_error, train_error, train_sizes, "TRAINING SET SIZE", "Training Set Size (Tree)", "tree_stats")
-    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
+    print_best_values(test_error, train_error, train_sizes, "TRAINING SET SIZE", "Training Set Size", "tree_stats")
+    plot_test_and_train_error(test_error, train_error, train_sizes, "(Decision Tree)Size of Training Data", 4)
 
 
 def vary_split_criterion(X_train, y_train, X_test, y_test):
     clf_gini = DecisionTreeClassifier(ccp_alpha=BASELINE_CCP)
     clf_entropy = DecisionTreeClassifier(criterion="entropy", ccp_alpha=BASELINE_CCP)
 
-    stuff = ["Train Error", "Test Error"]
+    x_labels = ["Train Error", "Test Error"]
     entropy_error = []
     gini_error = []
 
@@ -53,17 +53,17 @@ def vary_split_criterion(X_train, y_train, X_test, y_test):
     entropy_error.append(1 - clf_entropy.score(X_train, y_train))
     entropy_error.append(1 - clf_entropy.score(X_test, y_test))
 
-    X_axis = np.arange(len(stuff))
+    X_axis = np.arange(len(x_labels))
 
-    plt.figure(2, label="Test Error")
+    plt.figure(5, label="Test Error")
     plt.bar(X_axis - 0.2, gini_error, 0.4, label="Gini")
     plt.bar(X_axis + 0.2, entropy_error, 0.4, label="Entropy")
     plt.ylabel("Error")
-    plt.xticks(X_axis, stuff)
+    plt.xticks(X_axis, x_labels)
     plt.legend()
-    plt.savefig("Vary Criteria.svg", format="svg")
+    plt.savefig("(Decision Tree)Vary Criteria.svg", format="svg")
 
-    print_best_values(gini_error, entropy_error, stuff, "SPLIT CRITERIA", "Split Criteria", "tree_stats")
+    print_best_values(gini_error, entropy_error, x_labels, "SPLIT CRITERIA", "Split Criteria", "tree_stats")
 
 
 def vary_ccp_alpha(X_train, y_train, X_test, y_test):
@@ -86,7 +86,7 @@ def vary_ccp_alpha(X_train, y_train, X_test, y_test):
         ccp_alphas.append(ccp_alpha)
 
     print_best_values(test_error, train_error, ccp_alphas, "CCP ALPHA", "CCP Alpha", "tree_stats")
-    plot_test_and_train_error(test_error, train_error, ccp_alphas, "CCP Alpha", 1)
+    plot_test_and_train_error(test_error, train_error, ccp_alphas, "(Decision Tree) Vary CCP Alpha", 6)
 
 
 if __name__ == "__main__":

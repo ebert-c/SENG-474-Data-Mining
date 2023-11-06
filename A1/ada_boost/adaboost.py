@@ -3,7 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 from sklearn.ensemble import AdaBoostClassifier
 
-from utils import plot_test_and_train_error, print_best_values
+from A1.utils import plot_test_and_train_error, print_best_values
 
 
 def main():
@@ -28,7 +28,7 @@ def vary_maximum_depth(X_train, X_test, y_train, y_test):
         test_error.append(1 - boost_classifier.score(X_test, y_test))
         depth.append(i)
     print_best_values(test_error, train_error, depth, "DEPTH", "Depth", "adaboost_stats")
-    plot_test_and_train_error(test_error, train_error, depth, "Maximum Estimator Depth", 10)
+    plot_test_and_train_error(test_error, train_error, depth, "(AdaBoost) Maximum Estimator Depth", 1)
 
 
 def vary_iterations(X_train, X_test, y_train, y_test):
@@ -42,7 +42,7 @@ def vary_iterations(X_train, X_test, y_train, y_test):
         test_error.append(1 - boost_classifier.score(X_test, y_test))
         iterations.append(i)
     print_best_values(test_error, train_error, iterations, "ITERATIONS", "Iterations", "adaboost_stats")
-    plot_test_and_train_error(test_error, train_error, iterations, "Number of Iterations", 1)
+    plot_test_and_train_error(test_error, train_error, iterations, "(AdaBoost) Number of Iterations", 2)
 
 
 def vary_training_set_size(X, y):
@@ -58,7 +58,7 @@ def vary_training_set_size(X, y):
         test_error.append(1 - boost_classifier.score(X_test, y_test))
         train_sizes.append(train_size)
     print_best_values(test_error, train_error, train_sizes, "TRAINING SET SIZE", "Training Set Size (AdaBoost)", "adaboost_stats")
-    plot_test_and_train_error(test_error, train_error, train_sizes, "Size of Training Data", 4)
+    plot_test_and_train_error(test_error, train_error, train_sizes, "(AdaBoost) Size of Training Data", 3)
 
 
 if __name__ == "__main__":
